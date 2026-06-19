@@ -1,6 +1,7 @@
 import { NavLink, Route, Routes } from "react-router-dom";
 import {
   BookOpen,
+  Bot,
   Calculator,
   FlaskConical,
   LayoutDashboard,
@@ -9,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import Dashboard from "./pages/Dashboard";
+import Autopilot from "./pages/Autopilot";
 import Strategies from "./pages/Strategies";
 import Lab from "./pages/Lab";
 import PropFirm from "./pages/PropFirm";
@@ -18,6 +20,7 @@ import Settings from "./pages/Settings";
 
 const NAV = [
   { to: "/", label: "لوحة القيادة", en: "Dashboard", icon: LayoutDashboard },
+  { to: "/autopilot", label: "الطيار الآلي", en: "Autopilot", icon: Bot },
   { to: "/strategies", label: "الاستراتيجيات", en: "Strategies", icon: LineChart },
   { to: "/lab", label: "مختبر الاختبار", en: "Backtest", icon: FlaskConical },
   { to: "/prop", label: "شركات التمويل", en: "Prop Firms", icon: ShieldCheck },
@@ -60,6 +63,7 @@ export default function App() {
       <main className="main">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/autopilot" element={<Autopilot />} />
           <Route path="/strategies" element={<Strategies />} />
           <Route path="/lab" element={<Lab />} />
           <Route path="/prop" element={<PropFirm />} />

@@ -32,3 +32,6 @@ pnpm-debug.log*
 .env.*
 !.env.example
 secrets.json
+
+# Autopilot persisted runtime state
+server/.data

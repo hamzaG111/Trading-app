@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Database, Plug, Settings as Cog, Upload, Wallet } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Bot, Database, Plug, Settings as Cog, Upload, Wallet } from "lucide-react";
 import { useApp } from "@/state/AppContext";
 import { parseCsv } from "@/engine/data";
 import { Card } from "@/components/ui";
@@ -102,10 +103,14 @@ export default function Settings() {
 
       <Card title="الأتمتة والربط — خارطة الطريق" icon={<Plug size={15} />} style={{ marginTop: 18 }}>
         <p className="learn-p">
-          محرّك AURUM «نقي»: يأخذ بيانات ويُخرج أوزاناً مستهدفة وحدود مخاطر. لتشغيله آلياً بدخل فعلي
+          محرّك AURUM «نقي»: يأخذ بيانات ويُخرج أوزاناً مستهدفة وحدود مخاطر. <b style={{ color: "var(--gold-bright)" }}>الطيار
+          الآلي مُفعّل بالفعل</b> ويعمل في الوضع الورقي (خادم Node على مدار الساعة). لتشغيله بمال فعلي
           تُضاف طبقة تنفيذ (Execution Adapter) تترجم الأوزان إلى أوامر عبر واجهة وسيطك أو شركة
           التمويل. التسلسل الآمن والقانوني:
         </p>
+        <Link to="/autopilot" className="btn btn-primary" style={{ marginBottom: 16, display: "inline-flex", gap: 8, alignItems: "center" }}>
+          <Bot size={16} /> افتح لوحة الطيار الآلي
+        </Link>
         <div className="grid cols-3">
           {[
             { n: "1", t: "ورقي أولاً (Paper)", d: "شغّل النظام على حساب تجريبي شهوراً. لا مال حقيقي قبل إثبات الانضباط." },

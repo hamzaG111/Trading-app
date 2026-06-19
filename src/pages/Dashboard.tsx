@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Activity, ArrowUpRight, Gauge, ShieldCheck, TrendingUp } from "lucide-react";
+import { Activity, ArrowUpRight, Bot, Gauge, ShieldCheck, TrendingUp } from "lucide-react";
 import { useApp } from "@/state/AppContext";
 import { runBacktest, type EnsembleLeg } from "@/engine/backtest";
 import { defaultParams, STRATEGIES, STRATEGY_MAP } from "@/engine/strategies";
@@ -45,6 +45,14 @@ export default function Dashboard() {
           (Bridgewater)، والزخم (AQR) — فوقها طبقة إدارة مخاطر صارمة ومحرّك يحترم قواعد شركات
           التمويل. الأرقام أدناه ناتجة عن اختبار حقيقي على البيانات، بلا وعود وهمية.
         </p>
+        <div className="row" style={{ gap: 10, marginTop: 20 }}>
+          <Link to="/autopilot" className="btn btn-primary">
+            <Bot size={16} style={{ verticalAlign: -3 }} /> تشغيل الطيار الآلي
+          </Link>
+          <Link to="/lab" className="btn">
+            مختبر الاختبار
+          </Link>
+        </div>
       </div>
 
       <div className="grid cols-4" style={{ marginBottom: 18 }}>
