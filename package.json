@@ -10,6 +10,7 @@
     "server:dev": "tsx watch server/index.ts",
     "dev:all": "concurrently -n web,engine -c yellow,magenta \"npm run dev\" \"npm run server\"",
     "smoke": "tsx scripts/smoke.ts",
+    "quant": "tsx scripts/quant-test.ts",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "preview:shots": "node scripts/shots.mjs",

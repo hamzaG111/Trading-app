@@ -1,4 +1,4 @@
-import { BookOpen, Brain, Landmark, ScrollText, ShieldCheck, TrendingUp } from "lucide-react";
+import { Atom, BookOpen, Brain, Landmark, ScrollText, ShieldCheck, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui";
 
 const FUNDS = [
@@ -62,6 +62,45 @@ const BOOKS = [
   "Option Volatility & Pricing — Sheldon Natenberg",
 ];
 
+const ADVANCED = [
+  {
+    t: "نماذج العوامل (Factor Models)",
+    d: "تفكيك العائد إلى عوامل مستمرة: القيمة، الزخم، الجودة، التذبذب المنخفض، الحجم. أساس AQR ودِيمنشنال. متوفّر في صفحة «بحث العوامل».",
+  },
+  {
+    t: "نظرية المحفظة الحديثة (Markowitz)",
+    d: "الحدّ الكفء: لكل مستوى مخاطرة محفظة بأعلى عائد. محفظة المماس (أعلى شارب) وأدنى تباين. في «مُحسّن المحافظ».",
+  },
+  {
+    t: "تكافؤ المخاطر الحقيقي (ERC)",
+    d: "بدل أوزان رأس المال، وازن مساهمة المخاطرة لكل أصل بدقّة عبر مصفوفة التغاير (Roncalli). All-Weather علمياً.",
+  },
+  {
+    t: "HRP — التجميع الهرمي للمخاطر",
+    d: "ابتكار López de Prado (2016): يستخدم التعلّم الآلي (التجميع الهرمي) بدل عكس المصفوفة، فيتفوّق خارج العيّنة. غير تقليدي ويعمل.",
+  },
+  {
+    t: "انكماش التغاير (Ledoit-Wolf)",
+    d: "مصفوفة التغاير العيّنية صاخبة وتخدع المُحسّنات؛ دفعها نحو هدف ثابت يجعل الأوزان مستقرّة وموثوقة.",
+  },
+  {
+    t: "محاكاة مونت كارلو",
+    d: "آلاف المسارات المستقبلية لقياس توزيع النتائج، احتمال الهدف، واحتمال الإفلاس. البقاء قبل العائد.",
+  },
+  {
+    t: "VaR و CVaR ومخاطر الذيل",
+    d: "القيمة المعرّضة للمخاطر والخسارة المتوقّعة في الذيل (5% الأسوأ) — حيث تعيش الكوارث التي يتجاهلها شارب.",
+  },
+  {
+    t: "كشف الحالة (Hurst/Regime)",
+    d: "أُسّ هيرست يقيس ذاكرة السوق؛ النظام يتكيّف فيرجّح تتبّع الاتجاه أو الارتداد حسب الحالة المكتشفة.",
+  },
+  {
+    t: "معيار كيلي الجزئي",
+    d: "الحجم الأمثل رياضياً للرهان لتعظيم النموّ طويل المدى — مع أخذ كسر منه دائماً لتفادي الخراب.",
+  },
+];
+
 const IRON_RULES = [
   "لا تُخاطر أبداً بأكثر من نسبة صغيرة (1–2%) من رأس المال في فكرة واحدة.",
   "احمِ رأس المال أولاً؛ العائد يأتي ثانياً. البقاء شرط النموّ.",
@@ -104,6 +143,17 @@ export default function Learn() {
               <p className="learn-p" style={{ margin: 0, fontSize: 13 }}>
                 {f.lesson}
               </p>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card title="العلوم المتقدّمة المدمجة في AURUM" icon={<Atom size={15} />} style={{ marginBottom: 18 }}>
+        <div className="grid cols-3">
+          {ADVANCED.map((a) => (
+            <div key={a.t} className="card" style={{ padding: 14 }}>
+              <div className="learn-h" style={{ fontSize: 14 }}>{a.t}</div>
+              <div className="muted" style={{ fontSize: 12.5, lineHeight: 1.7 }}>{a.d}</div>
             </div>
           ))}
         </div>

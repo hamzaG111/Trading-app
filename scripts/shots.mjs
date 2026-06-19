@@ -10,12 +10,14 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const PAGES = [
   { path: "/", name: "01-dashboard" },
   { path: "/autopilot", name: "02-autopilot", wait: 4000 },
-  { path: "/strategies", name: "03-strategies" },
-  { path: "/lab", name: "04-backtest" },
-  { path: "/prop", name: "05-propfirm" },
-  { path: "/reality", name: "06-reality" },
-  { path: "/learn", name: "07-knowledge" },
-  { path: "/settings", name: "08-settings" },
+  { path: "/optimizer", name: "03-optimizer" },
+  { path: "/montecarlo", name: "04-montecarlo" },
+  { path: "/regime", name: "05-regime" },
+  { path: "/research", name: "06-research" },
+  { path: "/strategies", name: "07-strategies" },
+  { path: "/lab", name: "08-backtest" },
+  { path: "/prop", name: "09-propfirm" },
+  { path: "/learn", name: "10-knowledge" },
 ];
 
 const browser = await puppeteer.launch({
