@@ -1,0 +1,19 @@
+{
+  "name": "AURUM — Quant Trading System",
+  "short_name": "AURUM",
+  "description": "نظام تداول كمّي شخصي بإدارة مخاطر صارمة واحترام قواعد شركات التمويل.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0b",
+  "theme_color": "#0a0a0b",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
