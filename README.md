@@ -8,6 +8,16 @@
 
 ---
 
+## 🖼️ معاينة
+
+| لوحة القيادة | الطيار الآلي (حيّ) |
+|:---:|:---:|
+| ![Dashboard](docs/preview/dashboard.png) | ![Autopilot](docs/preview/autopilot.png) |
+
+<p align="center"><img src="docs/preview/mobile.png" width="280" alt="Mobile" /></p>
+
+> لإعادة توليد الصور: `npx puppeteer browsers install chrome` ثم `npm run preview:shots` (والتطبيق يعمل عبر `npm run dev:all`).
+
 ## ⚠️ الحقيقة أولاً (اقرأ هذا)
 
 - **لا يوجد** «5$ → مليون في شهر»، ولا «مليار في سنة»، ولا «دخل سلبي مضمون». هذه أرقام مستحيلة

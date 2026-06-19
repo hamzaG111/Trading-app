@@ -35,3 +35,6 @@ secrets.json
 
 # Autopilot persisted runtime state
 server/.data
+
+# Generated preview screenshots (working dir). Committed copies live in docs/preview.
+screenshots/

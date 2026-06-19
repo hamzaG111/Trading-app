@@ -12,6 +12,7 @@
     "smoke": "tsx scripts/smoke.ts",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "preview:shots": "node scripts/shots.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "concurrently": "^8.2.2",
+    "puppeteer": "^25.1.0",
     "tsx": "^4.16.0",
     "typescript": "^5.5.4",
     "vite": "^5.4.2"
