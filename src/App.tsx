@@ -9,12 +9,14 @@ import {
   GitBranch,
   LayoutDashboard,
   LineChart,
+  Plug,
   Radar,
   Settings as SettingsIcon,
   ShieldCheck,
 } from "lucide-react";
 import Dashboard from "./pages/Dashboard";
 import Autopilot from "./pages/Autopilot";
+import Connections from "./pages/Connections";
 import Strategies from "./pages/Strategies";
 import Lab from "./pages/Lab";
 import PropFirm from "./pages/PropFirm";
@@ -32,6 +34,7 @@ const SECTIONS = [
     items: [
       { to: "/", label: "لوحة القيادة", en: "Home", icon: LayoutDashboard },
       { to: "/autopilot", label: "الطيار الآلي", en: "Autopilot", icon: Bot },
+      { to: "/connect", label: "الربط (MT5)", en: "Connect", icon: Plug },
       { to: "/strategies", label: "الاستراتيجيات", en: "Strategies", icon: LineChart },
       { to: "/lab", label: "مختبر الاختبار", en: "Backtest", icon: FlaskConical },
       { to: "/prop", label: "شركات التمويل", en: "Prop", icon: ShieldCheck },
@@ -104,6 +107,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/autopilot" element={<Autopilot />} />
+          <Route path="/connect" element={<Connections />} />
           <Route path="/strategies" element={<Strategies />} />
           <Route path="/lab" element={<Lab />} />
           <Route path="/prop" element={<PropFirm />} />

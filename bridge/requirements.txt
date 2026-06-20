@@ -1,0 +1,8 @@
+# The bridge runs in MOCK mode with the Python standard library only — no installs.
+#
+# For LIVE mode (a real MetaTrader 5 account such as FundedNext) install the
+# official package below. It works on Windows (and on Linux via Wine):
+#
+#   pip install -r bridge/requirements.txt
+#
+MetaTrader5>=5.0.45

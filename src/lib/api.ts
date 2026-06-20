@@ -75,6 +75,21 @@ export interface Meta {
   propPresets: { id: string; name: string }[];
 }
 
+export interface BridgeHealth {
+  ok: boolean;
+  mode: "mock" | "live";
+  connected: boolean;
+  symbols: string[];
+  account: { server: string; balance: number; equity: number; currency: string };
+}
+
+export interface Connection {
+  brokerKind: "paper" | "mt5";
+  bridgeUrl: string;
+  symbols: string[];
+  bridge: BridgeHealth | null;
+}
+
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     headers: { "Content-Type": "application/json" },
@@ -95,4 +110,7 @@ export const api = {
     req<Snapshot>("/api/reset", { method: "POST", body: JSON.stringify(patch) }),
   config: (patch: Record<string, unknown>) =>
     req<Snapshot>("/api/config", { method: "POST", body: JSON.stringify(patch) }),
+  connection: () => req<Connection>("/api/connection"),
+  connect: (brokerKind: "paper" | "mt5") =>
+    req<Snapshot>("/api/connection", { method: "POST", body: JSON.stringify({ brokerKind }) }),
 };

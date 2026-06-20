@@ -8,6 +8,7 @@
     "dev": "vite",
     "server": "tsx server/index.ts",
     "server:dev": "tsx watch server/index.ts",
+    "bridge": "python3 bridge/mt5_bridge.py",
     "dev:all": "concurrently -n web,engine -c yellow,magenta \"npm run dev\" \"npm run server\"",
     "smoke": "tsx scripts/smoke.ts",
     "quant": "tsx scripts/quant-test.ts",

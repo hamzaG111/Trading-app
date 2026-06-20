@@ -53,6 +53,10 @@ export interface AutopilotConfig {
   /** Integrated construction pipeline (regime + risk model + factors). When set,
    *  it supersedes the plain strategyId/ensemble path. */
   engine?: PortfolioConfig | null;
+  /** Where execution happens: in-process paper sim, or a real MT5 account bridge. */
+  brokerKind: "paper" | "mt5";
+  /** Base URL of the Python MT5 bridge (used when brokerKind === "mt5"). */
+  bridgeUrl: string;
 }
 
 export interface DecisionLog {
