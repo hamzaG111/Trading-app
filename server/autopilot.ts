@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { applyRiskOverlay, estimatePortfolioDailyVol, gross, scale } from "../src/engine/risk";
 import { STRATEGY_MAP, STRATEGIES, defaultParams, ensembleWeights } from "../src/engine/strategies";
+import { constructPortfolio } from "../src/engine/portfolio";
 import { propGuardMaxGross } from "../src/engine/propFirm";
 import type { Candle, Universe, Weights } from "../src/engine/types";
 import { PaperBroker } from "./broker";
@@ -174,7 +175,10 @@ export class Autopilot {
 
   private targetWeights(symbols: string[], t: number, equity: number): Weights {
     let raw: Weights;
-    if (this.config.strategyId === ENSEMBLE) {
+    if (this.config.engine) {
+      // Full integrated pipeline: regime + risk-model (HRP/ERC) + factor tilt.
+      raw = constructPortfolio(this.histories, symbols, t, this.config.engine);
+    } else if (this.config.strategyId === ENSEMBLE) {
       raw = ensembleWeights(
         STRATEGIES.map((s) => ({ strategy: s, params: defaultParams(s), weight: 1 })),
         this.histories,
@@ -301,7 +305,18 @@ export class Autopilot {
       decisions: this.decisions,
       prices,
       haltReason: this.haltReason,
+      engineMode: this.describeEngine(),
     };
+  }
+
+  private describeEngine(): string {
+    const e = this.config.engine;
+    if (!e) return this.config.strategyId === ENSEMBLE ? "محفظة مدمجة" : (STRATEGY_MAP[this.config.strategyId]?.nameAr ?? this.config.strategyId);
+    const parts: string[] = [];
+    if (e.riskModel !== "none") parts.push(e.riskModel.toUpperCase());
+    if (e.factorTilt > 0) parts.push(`عوامل ${e.factorTilt}`);
+    if (e.regimeAdaptive) parts.push("تكيّف الحالة");
+    return parts.length ? `محرّك متكامل: ${parts.join(" · ")}` : "محرّك متكامل";
   }
 
   // ---------- persistence ----------

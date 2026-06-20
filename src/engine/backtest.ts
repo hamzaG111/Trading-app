@@ -19,6 +19,7 @@ import {
   turnover,
 } from "./risk";
 import { STRATEGY_MAP, ensembleWeights } from "./strategies";
+import { constructPortfolio, type PortfolioConfig } from "./portfolio";
 import type {
   BacktestResult,
   PropFirmRules,
@@ -39,6 +40,8 @@ export interface BacktestConfig {
   params?: Record<string, number>;
   /** Multi-strategy ensemble mode (takes precedence over strategyId if non-empty). */
   ensemble?: EnsembleLeg[];
+  /** Full construction pipeline (regime + risk model + factors). Highest precedence. */
+  portfolio?: PortfolioConfig;
   risk: RiskConfig;
   initialEquity: number;
   /** Optional prop-firm rules to enforce live and evaluate against. */
@@ -139,6 +142,10 @@ export function runBacktest(
 function buildWeightFn(
   config: BacktestConfig,
 ): (u: Universe, symbols: string[], t: number) => Weights {
+  if (config.portfolio) {
+    const pc = config.portfolio;
+    return (u, symbols, t) => constructPortfolio(u, symbols, t, pc);
+  }
   if (config.ensemble && config.ensemble.length > 0) {
     const legs = config.ensemble
       .filter((l) => STRATEGY_MAP[l.strategyId])

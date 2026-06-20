@@ -7,6 +7,7 @@ import { DEMO_SYMBOLS } from "../src/engine/data";
 import { RISK_PRESETS } from "../src/engine/risk";
 import { STRATEGIES } from "../src/engine/strategies";
 import { PROP_PRESETS } from "../src/engine/propFirm";
+import { defaultPortfolioConfig, type RiskModel } from "../src/engine/portfolio";
 import { Autopilot } from "./autopilot";
 import type { AutopilotConfig } from "./types";
 
@@ -21,6 +22,8 @@ const defaultConfig: AutopilotConfig = {
   initialEquity: 100_000,
   intervalMs: 2500,
   killSwitch: { maxDrawdown: 0.2, maxDailyLoss: 0.05 },
+  // Trade the empirically-best integrated engine by default (HRP + factor tilt).
+  engine: defaultPortfolioConfig(),
 };
 
 const autopilot = new Autopilot(defaultConfig);
@@ -82,6 +85,26 @@ function sanitizeConfig(body: Record<string, unknown>): Partial<AutopilotConfig>
   else if (typeof body.prop === "object") patch.prop = body.prop as AutopilotConfig["prop"];
   if (typeof body.killSwitch === "object" && body.killSwitch) {
     patch.killSwitch = body.killSwitch as AutopilotConfig["killSwitch"];
+  }
+  // Construction-engine controls.
+  if (body.engineEnabled === false) {
+    patch.engine = null;
+  } else if (
+    body.engineEnabled === true ||
+    body.riskModel !== undefined ||
+    body.riskBlend !== undefined ||
+    body.factorTilt !== undefined ||
+    body.regimeAdaptive !== undefined
+  ) {
+    const e = defaultPortfolioConfig();
+    const models: RiskModel[] = ["none", "inv-var", "erc", "hrp", "min-var"];
+    if (typeof body.riskModel === "string" && models.includes(body.riskModel as RiskModel)) {
+      e.riskModel = body.riskModel as RiskModel;
+    }
+    if (typeof body.riskBlend === "number") e.riskBlend = Math.max(0, Math.min(1, body.riskBlend));
+    if (typeof body.factorTilt === "number") e.factorTilt = Math.max(0, Math.min(1, body.factorTilt));
+    if (typeof body.regimeAdaptive === "boolean") e.regimeAdaptive = body.regimeAdaptive;
+    patch.engine = e;
   }
   return patch;
 }

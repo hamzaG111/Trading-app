@@ -2,6 +2,7 @@
 // exact same strategies/risk/prop logic that powers the research UI also drives
 // live (paper) execution — no divergence between what you test and what runs.
 import type { Candle, PropFirmRules, RiskConfig } from "../src/engine/types";
+import type { PortfolioConfig } from "../src/engine/portfolio";
 
 export type OrderSide = "buy" | "sell";
 
@@ -49,6 +50,9 @@ export interface AutopilotConfig {
   /** Optional prop-firm rule set enforced live. */
   prop?: PropFirmRules;
   killSwitch: KillSwitch;
+  /** Integrated construction pipeline (regime + risk model + factors). When set,
+   *  it supersedes the plain strategyId/ensemble path. */
+  engine?: PortfolioConfig | null;
 }
 
 export interface DecisionLog {
@@ -77,6 +81,8 @@ export interface AutopilotSnapshot {
   decisions: DecisionLog[];
   prices: Record<string, number>;
   haltReason?: string;
+  /** Human-readable description of the active construction engine. */
+  engineMode: string;
 }
 
 export interface MarketTick {

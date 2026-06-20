@@ -46,7 +46,14 @@ export interface Snapshot {
     intervalMs: number;
     killSwitch: { maxDrawdown: number; maxDailyLoss: number };
     prop?: { name: string } | null;
+    engine?: {
+      riskModel: string;
+      riskBlend: number;
+      factorTilt: number;
+      regimeAdaptive: boolean;
+    } | null;
   };
+  engineMode: string;
   equity: number;
   cash: number;
   peakEquity: number;

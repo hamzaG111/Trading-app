@@ -3,6 +3,7 @@ import { FlaskConical, Layers, SlidersHorizontal } from "lucide-react";
 import { useApp } from "@/state/AppContext";
 import { runBacktest, type BacktestConfig, type EnsembleLeg } from "@/engine/backtest";
 import { defaultParams, STRATEGIES, STRATEGY_MAP } from "@/engine/strategies";
+import { defaultPortfolioConfig, type RiskModel } from "@/engine/portfolio";
 import { RISK_PRESETS } from "@/engine/risk";
 import { Card, Segmented, Slider, Stat } from "@/components/ui";
 import EquityChart from "@/components/EquityChart";
@@ -20,6 +21,11 @@ export default function Lab() {
     defaultParams(STRATEGY_MAP["ts-momentum"]),
   );
   const [riskKey, setRiskKey] = useState<RiskKey>("balanced");
+  const [mode, setMode] = useState<"engine" | "strategy">("engine");
+  const [riskModel, setRiskModel] = useState<RiskModel>("hrp");
+  const [riskBlend, setRiskBlend] = useState(0.8);
+  const [factorTilt, setFactorTilt] = useState(0.2);
+  const [regimeAdaptive, setRegimeAdaptive] = useState(false);
 
   const isEnsemble = strategyId === ENSEMBLE_ID;
   const strategy = STRATEGY_MAP[strategyId];
@@ -31,6 +37,10 @@ export default function Lab() {
 
   const config: BacktestConfig = useMemo(() => {
     const risk = RISK_PRESETS[riskKey].config;
+    if (mode === "engine") {
+      const portfolio = { ...defaultPortfolioConfig(), riskModel, riskBlend, factorTilt, regimeAdaptive };
+      return { portfolio, risk, initialEquity: capital };
+    }
     if (isEnsemble) {
       const ensemble: EnsembleLeg[] = STRATEGIES.map((s) => ({
         strategyId: s.id,
@@ -40,7 +50,7 @@ export default function Lab() {
       return { ensemble, risk, initialEquity: capital };
     }
     return { strategyId, params, risk, initialEquity: capital };
-  }, [isEnsemble, strategyId, params, riskKey, capital]);
+  }, [mode, riskModel, riskBlend, factorTilt, regimeAdaptive, isEnsemble, strategyId, params, riskKey, capital]);
 
   const result = useMemo(
     () => runBacktest(universe, symbols, config),
@@ -62,41 +72,78 @@ export default function Lab() {
       <div className="grid cols-3" style={{ gap: 18 }}>
         {/* ---- Controls ---- */}
         <Card title="الإعدادات" icon={<SlidersHorizontal size={15} />}>
-          <div className="field-label" style={{ marginBottom: 9 }}>
-            الاستراتيجية
-          </div>
-          <select
-            value={strategyId}
-            onChange={(e) => selectStrategy(e.target.value)}
-            style={{ marginBottom: 18 }}
-          >
-            <option value={ENSEMBLE_ID}>★ المحفظة المدمجة (كل الاستراتيجيات)</option>
-            {STRATEGIES.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.nameAr} — {s.name}
-              </option>
-            ))}
-          </select>
+          <div className="field-label" style={{ marginBottom: 9 }}>النمط</div>
+          <Segmented<"engine" | "strategy">
+            value={mode}
+            onChange={setMode}
+            options={[
+              { value: "engine", label: "محرّك متكامل" },
+              { value: "strategy", label: "استراتيجية" },
+            ]}
+          />
+          <div className="divider" />
 
-          {isEnsemble ? (
-            <div className="note" style={{ marginBottom: 18 }}>
-              <Layers size={14} style={{ verticalAlign: "-2px" }} /> تدمج الاستراتيجيات الخمس بأوزان
-              متساوية في كتاب واحد — هكذا تعمل صناديق المنصّات (Millennium، Citadel): دمج محرّكات
-              غير مترابطة لتنعيم المنحنى.
-            </div>
-          ) : (
-            strategy.params.map((p) => (
-              <Slider
-                key={p.key}
-                label={p.label}
-                unit={p.unit}
-                min={p.min}
-                max={p.max}
-                step={p.step}
-                value={params[p.key] ?? p.default}
-                onChange={(v) => setParams((prev) => ({ ...prev, [p.key]: v }))}
+          {mode === "engine" ? (
+            <>
+              <div className="note" style={{ marginBottom: 16 }}>
+                <Layers size={14} style={{ verticalAlign: "-2px" }} /> خطّ بناء المحفظة: دمج
+                الاستراتيجيات ← توزيع المخاطر (HRP/ERC) ← ميل العوامل. نفس المحرّك الذي يشغّل الطيار
+                الآلي.
+              </div>
+              <div className="field-label" style={{ marginBottom: 8 }}>نموذج المخاطر</div>
+              <Segmented<RiskModel>
+                value={riskModel}
+                onChange={setRiskModel}
+                options={[
+                  { value: "hrp", label: "HRP" },
+                  { value: "erc", label: "ERC" },
+                  { value: "min-var", label: "أدنى تباين" },
+                  { value: "none", label: "إيقاف" },
+                ]}
               />
-            ))
+              <div style={{ height: 14 }} />
+              <Slider label="مزج نموذج المخاطر" min={0} max={1} step={0.1} value={riskBlend} onChange={setRiskBlend} />
+              <Slider label="ميل العوامل" min={0} max={0.6} step={0.05} value={factorTilt} onChange={setFactorTilt} />
+              <div className="row spread">
+                <span className="muted" style={{ fontSize: 13 }}>تكيّف الحالة (Regime)</span>
+                <button
+                  className={`btn${regimeAdaptive ? " btn-primary" : ""}`}
+                  style={{ padding: "6px 14px" }}
+                  onClick={() => setRegimeAdaptive((v) => !v)}
+                >
+                  {regimeAdaptive ? "مُفعّل" : "مطفأ"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="field-label" style={{ marginBottom: 9 }}>الاستراتيجية</div>
+              <select value={strategyId} onChange={(e) => selectStrategy(e.target.value)} style={{ marginBottom: 18 }}>
+                <option value={ENSEMBLE_ID}>★ المحفظة المدمجة (كل الاستراتيجيات)</option>
+                {STRATEGIES.map((s) => (
+                  <option key={s.id} value={s.id}>{s.nameAr} — {s.name}</option>
+                ))}
+              </select>
+              {isEnsemble ? (
+                <div className="note" style={{ marginBottom: 18 }}>
+                  <Layers size={14} style={{ verticalAlign: "-2px" }} /> تدمج الاستراتيجيات الخمس بأوزان
+                  متساوية في كتاب واحد — هكذا تعمل صناديق المنصّات (Millennium، Citadel).
+                </div>
+              ) : (
+                strategy.params.map((p) => (
+                  <Slider
+                    key={p.key}
+                    label={p.label}
+                    unit={p.unit}
+                    min={p.min}
+                    max={p.max}
+                    step={p.step}
+                    value={params[p.key] ?? p.default}
+                    onChange={(v) => setParams((prev) => ({ ...prev, [p.key]: v }))}
+                  />
+                ))
+              )}
+            </>
           )}
 
           <div className="divider" />

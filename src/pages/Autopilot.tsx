@@ -85,7 +85,10 @@ export default function Autopilot() {
               طارئة. أنت تُشرف فقط.
             </p>
           </div>
-          <StatusPill state={snap.state} mode={snap.mode} />
+          <div className="row" style={{ gap: 10, alignItems: "center" }}>
+            <span className="tag" style={{ fontSize: 12 }}>{snap.engineMode}</span>
+            <StatusPill state={snap.state} mode={snap.mode} />
+          </div>
         </div>
       </div>
 
@@ -228,6 +231,28 @@ export default function Autopilot() {
                 { value: "aggressive", label: "هجومي" },
               ]}
             />
+            <div className="divider" />
+            <div className="field-label" style={{ marginBottom: 8 }}>نموذج المخاطر (المحرّك)</div>
+            <Segmented
+              value={snap.config.engine?.riskModel ?? "none"}
+              onChange={(v) => act(() => api.config({ riskModel: v }))}
+              options={[
+                { value: "hrp", label: "HRP" },
+                { value: "erc", label: "ERC" },
+                { value: "min-var", label: "أدنى تباين" },
+                { value: "none", label: "إيقاف" },
+              ]}
+            />
+            <div className="row spread" style={{ marginTop: 12 }}>
+              <span className="muted" style={{ fontSize: 13 }}>تكيّف الحالة (Regime)</span>
+              <button
+                className={`btn${snap.config.engine?.regimeAdaptive ? " btn-primary" : ""}`}
+                style={{ padding: "6px 14px" }}
+                onClick={() => act(() => api.config({ regimeAdaptive: !snap.config.engine?.regimeAdaptive }))}
+              >
+                {snap.config.engine?.regimeAdaptive ? "مُفعّل" : "مطفأ"}
+              </button>
+            </div>
             <div className="divider" />
             <GuardBar label="حدّ الخسارة اليومي" used={dailyUsed} limit={fmtPct(ks.maxDailyLoss, 0)} />
             <GuardBar label="مفتاح إيقاف السحب" used={ddUsed} limit={fmtPct(ks.maxDrawdown, 0)} />

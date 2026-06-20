@@ -2,8 +2,9 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Activity, ArrowUpRight, Bot, Gauge, ShieldCheck, TrendingUp } from "lucide-react";
 import { useApp } from "@/state/AppContext";
-import { runBacktest, type EnsembleLeg } from "@/engine/backtest";
-import { defaultParams, STRATEGIES, STRATEGY_MAP } from "@/engine/strategies";
+import { runBacktest } from "@/engine/backtest";
+import { defaultParams, STRATEGIES } from "@/engine/strategies";
+import { defaultPortfolioConfig } from "@/engine/portfolio";
 import { RISK_PRESETS } from "@/engine/risk";
 import { Card, Stat } from "@/components/ui";
 import EquityChart from "@/components/EquityChart";
@@ -11,12 +12,8 @@ import Sparkline from "@/components/Sparkline";
 import { fmtCompact, fmtNum, fmtPct, signClass } from "@/lib/format";
 import { theme } from "@/theme";
 
-/** The flagship multi-strategy book: uncorrelated sleeves netted into one curve. */
-const FLAGSHIP: EnsembleLeg[] = [
-  { strategyId: "risk-parity", params: defaultParams(STRATEGY_MAP["risk-parity"]), weight: 0.45 },
-  { strategyId: "ts-momentum", params: defaultParams(STRATEGY_MAP["ts-momentum"]), weight: 0.3 },
-  { strategyId: "xs-momentum", params: defaultParams(STRATEGY_MAP["xs-momentum"]), weight: 0.25 },
-];
+/** The flagship book: the full integrated engine (HRP risk-sizing + factor tilt). */
+const FLAGSHIP = defaultPortfolioConfig();
 
 export default function Dashboard() {
   const { universe, symbols, capital } = useApp();
@@ -24,7 +21,7 @@ export default function Dashboard() {
   const result = useMemo(
     () =>
       runBacktest(universe, symbols, {
-        ensemble: FLAGSHIP,
+        portfolio: FLAGSHIP,
         risk: RISK_PRESETS.balanced.config,
         initialEquity: capital,
       }),
