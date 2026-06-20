@@ -1,13 +1,10 @@
 @echo off
-chcp 65001 >nul
-title AURUM - 3) Run app (web + engine, MT5 mode)
 cd /d "%~dp0.."
 echo ============================================
-echo   تشغيل AURUM (الويب + المحرّك) بوضع MT5
-echo ------------------------------------------
-echo   شغّل الجسر اولا (2-bridge.bat).
-echo   ثم افتح المتصفح على:  http://localhost:5173
-echo   ومن صفحة (الربط) اضغط: اتصل بحساب MT5
+echo   Running AURUM (web + engine) in MT5 mode
+echo   Run the bridge first (2-bridge).
+echo   Then open in your browser:  http://localhost:5173
+echo   Go to the Connect page and click: Connect to MT5
 echo ============================================
 echo.
 set BROKER=mt5
